@@ -1,0 +1,14 @@
+colo Default-256
+
+set number
+set millerview
+only
+
+map <F1> :set millerview!<Cr>
+map <F2> :set lsview!<Cr>
+map <F3> :set millerview!<Cr>:vsplit!<Cr><Tab>:set millerview!<Cr><Tab>
+map <F4> :sh<Cr>
+map <c-a> :!! du -hs %c<Cr>
+
+filetype *.png,*.jpg,*.svg feh -d --start-at
+filetype *.mp4,*.mkv mpv
