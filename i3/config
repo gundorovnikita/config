@@ -3,34 +3,35 @@ set $mod Mod4
 font pango:monospace 8
 
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
-exec --no-startup-id nm-applet
-exec --no-startup-id nitrogen --restore; sleep 1; compton -b
 
-set $refresh_i3status killall -SIGUSR1 i3status
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
-bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+exec --no-startup-id nm-applet
+
+exec --no-startup-id amixer -q sset Master 100% on 
+
+exec --no-startup-id compton -b
+
+# exec --no-startup-id nitrogen --restore; sleep 1; compton -b
+
+exec --no-startup-id sh ~/.fehbg &
 
 floating_modifier $mod
-
-default_border pixel
-smart_borders on
 
 bindsym $mod+Return exec i3-sensible-terminal 
 
 bindsym $mod + F1 exec firefox
 bindsym $mod + F2 exec code
-bindsym $mod + F3 exec thunar
+bindsym $mod + F3 exec alacritty -e vifm
+bindsym $mod + Shift + F3 exec thunar
 bindsym $mod + F4 exec telegram-desktop
 bindsym $mod + F5 exec flatpak run com.valvesoftware.Steam
 
+bindsym $mod+d exec --no-startup-id "rofi -show drun -font \\"DejaVu 9\\" -run-shell-command '{terminal} -e \\" {cmd}; read -n 1 -s\\"'"
+
+# screenshot with scrot
 bindsym --release Print exec scrot ~/Images/scr/screen-%Y-%m-%d-%H:%M:%S.jpg -s
 bindsym Shift + Print exec scrot ~/Images/scr/screen-%Y-%m-%d-%H:%M:%S.jpg 
 
 bindsym $mod+Shift+q kill
-
-bindsym $mod+d exec --no-startup-id "rofi -show drun -font \\"DejaVu 9\\" -run-shell-command '{terminal} -e \\" {cmd}; read -n 1 -s\\"'"
 
 bindsym $mod+j focus left
 bindsym $mod+k focus down
@@ -93,44 +94,32 @@ bindsym $mod+8 workspace number $ws8
 bindsym $mod+9 workspace number $ws9
 bindsym $mod+0 workspace number $ws10
 
-bindsym $mod+Shift+1 move container to workspace number $ws1 
-bindsym $mod+Shift+2 move container to workspace number $ws2
-bindsym $mod+Shift+3 move container to workspace number $ws3
-bindsym $mod+Shift+4 move container to workspace number $ws4
-bindsym $mod+Shift+5 move container to workspace number $ws5
-bindsym $mod+Shift+6 move container to workspace number $ws6
-bindsym $mod+Shift+7 move container to workspace number $ws7
-bindsym $mod+Shift+8 move container to workspace number $ws8
-bindsym $mod+Shift+9 move container to workspace number $ws9
-bindsym $mod+Shift+0 move container to workspace number $ws10
+bindsym $mod+Ctrl+1 move container to workspace number $ws1 
+bindsym $mod+Ctrl+2 move container to workspace number $ws2
+bindsym $mod+Ctrl+3 move container to workspace number $ws3
+bindsym $mod+Ctrl+4 move container to workspace number $ws4
+bindsym $mod+Ctrl+5 move container to workspace number $ws5
+bindsym $mod+Ctrl+6 move container to workspace number $ws6
+bindsym $mod+Ctrl+7 move container to workspace number $ws7
+bindsym $mod+Ctrl+8 move container to workspace number $ws8
+bindsym $mod+Ctrl+9 move container to workspace number $ws9
+bindsym $mod+Ctrl+0 move container to workspace number $ws10
 
-bindsym $mod+Ctrl+1 move container to workspace $ws1; workspace $ws1
-bindsym $mod+Ctrl+2 move container to workspace $ws2; workspace $ws2
-bindsym $mod+Ctrl+3 move container to workspace $ws3; workspace $ws3
-bindsym $mod+Ctrl+4 move container to workspace $ws4; workspace $ws4
-bindsym $mod+Ctrl+5 move container to workspace $ws5; workspace $ws5
-bindsym $mod+Ctrl+6 move container to workspace $ws6; workspace $ws6
-bindsym $mod+Ctrl+7 move container to workspace $ws7; workspace $ws7
-bindsym $mod+Ctrl+8 move container to workspace $ws8; workspace $ws8
-bindsym $mod+Ctrl+9 move container to workspace $ws8; workspace $ws8
+bindsym $mod+Shift+1 move container to workspace $ws1; workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2; workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3; workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4; workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5; workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6; workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7; workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8; workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws8; workspace $ws8
 
 bindsym $mod+Shift+c reload
 
 bindsym $mod+Shift+r restart
 
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
-
-mode "volume" {
-        bindsym Up exec amixer -q sset Master 100% on; mode "default"
-        bindsym Right exec amixer -q sset Master 70% on; mode "default"
-        bindsym Down exec amixer -q sset Master 40% on; mode "default"
-
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-        bindsym $mod+v mode "default"
-}
-
-bindsym $mod+v mode "volume"
 
 mode "resize" {
         bindsym j resize shrink width 10 px or 10 ppt
@@ -150,14 +139,12 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
+set $mode_system System (Cntrl+s) suspend, (r) reboot, (Shift+s) shutdown, (e) exit
 mode "$mode_system" {
-    bindsym l exec --no-startup-id ~/Documents/Scripts/i3exit lock, mode "default"
-    bindsym e exec --no-startup-id ~/Documents/Scripts/i3exit logout, mode "default"
-    bindsym Ctrl+s exec --no-startup-id ~/Documents/Scripts/i3exit suspend, mode "default"
-    bindsym h exec --no-startup-id ~/Documents/Scripts/i3exit hibernate, mode "default"
-    bindsym r exec --no-startup-id ~/Documents/Scripts/i3exit reboot, mode "default"
-    bindsym Shift+s exec --no-startup-id ~/Documents/Scripts/i3exit shutdown, mode "default"
+    bindsym Ctrl+s exec suspend
+    bindsym r exec reboot
+    bindsym Shift+s exec shutdown now
+    bindsym e exec i3-msg exit
 
     # back to normal: Enter or Escape
     bindsym Return mode "default"
@@ -165,6 +152,28 @@ mode "$mode_system" {
 }            
 bindsym $mod+Pause mode "$mode_system"
 
+bar {
+        status_command i3status
+	font xft:Sans, FontAwesome 10
+}
+
+floating_minimum_size 75 x 50
+floating_maximum_size -1 x -1
+
+# volume
+mode "volume" {
+        bindsym Up exec pactl set-sink-volume 0 150%; mode "default"
+        bindsym Right exec amixer -q sset Master 100% on; mode "default"
+        bindsym Down exec amixer -q sset Master 65% on; mode "default"
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+v mode "default"
+}
+
+bindsym $mod+v mode "volume"
+
+# gaps
 gaps inner 10
 gaps outer 0
 smart_gaps on
@@ -175,11 +184,5 @@ bindsym $mod+x gaps outer current plus 4
 bindsym $mod+Shift+x gaps outer current minus 4
 bindsym $mod+t gaps inner all set 10; gaps outer all set 0
 bindsym $mod+shift+t gaps inner all set 0; gaps outer all set 0
-
-bar {
-        status_command i3status
-	font xft:Sans, FontAwesome 10
-}
-
-floating_minimum_size 75 x 50
-floating_maximum_size -1 x -1
+default_border pixel
+smart_borders on
